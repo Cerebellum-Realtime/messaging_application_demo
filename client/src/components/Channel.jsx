@@ -11,7 +11,6 @@ const Channel = ({ toggleJoinChannel, toggleLeaveChannel, currentChannel }) => {
 
     socket.emit("subscribe", channelNameLower, (response) => {
       if (response.success) {
-        console.log(response.message);
         toggleJoinChannel(channelNameLower);
         setChannelNameField("");
       } else {

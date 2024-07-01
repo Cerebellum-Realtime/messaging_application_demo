@@ -1,9 +1,9 @@
 const { handleConnection } = require("../controllers/socketController");
 const { createServer } = require("http");
 const { Server } = require("socket.io");
-const { createAdapter } = require("@socket.io/redis-adapter");
+// const { createAdapter } = require("@socket.io/redis-adapter");
 
-const createSocketServer = (pubClient, subClient) => {
+const createSocketServer = () => {
   const httpServer = createServer();
 
   const ioServer = new Server(httpServer, {
@@ -13,7 +13,7 @@ const createSocketServer = (pubClient, subClient) => {
     },
   });
 
-  ioServer.adapter(createAdapter(pubClient, subClient));
+  // ioServer.adapter(createAdapter(pubClient, subClient));
 
   ioServer.on("connection", (socket) => {
     handleConnection(socket, ioServer);

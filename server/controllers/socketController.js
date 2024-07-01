@@ -2,6 +2,7 @@ const handleConnection = (socket, ioServer) => {
   socket.on("subscribe", async (channel, callback) => {
     try {
       await socket.join(channel);
+
       if (typeof callback === "function") {
         callback({
           success: true,
@@ -19,9 +20,16 @@ const handleConnection = (socket, ioServer) => {
     }
   });
 
-  socket.on("unsubscribe", async (channel) => {
+  socket.on("unsubscribe", async (channel, callback) => {
     try {
       await socket.leave(channel);
+
+      if (typeof callback === "function") {
+        callback({
+          success: true,
+          message: "You have left the channel",
+        });
+      }
     } catch (error) {
       console.error(`Failed to unsubscribe from ${channel}:`, error);
     }
