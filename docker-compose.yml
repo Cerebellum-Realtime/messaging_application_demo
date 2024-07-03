@@ -1,9 +1,8 @@
-version: "3"
+version: "3.8"
 
 services:
-  websocket-server:
-    build:
-      context: ./server
-      dockerfile: Dockerfile
+  redis:
+    image: redis
+    container_name: my-redis
     ports:
-      - "8000:8000"
+      - "6379:6379"
