@@ -9,7 +9,7 @@ const createSocketServer = () => {
   const ioServer = new Server(httpServer, {
     transports: ["websocket", "polling"],
     cors: {
-      origin: "*",
+      origin: "http://localhost:5173",
     },
   });
 
