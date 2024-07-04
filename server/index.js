@@ -6,7 +6,6 @@ const { handleConnection } = require("./controllers/socketController");
 const app = express();
 const redis = require("redis");
 const { createAdapter } = require("@socket.io/redis-adapter");
-const { socket } = require("../client/src/socket");
 
 app.use(
   cors({
