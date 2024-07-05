@@ -1,5 +1,7 @@
-const handleConnection = (socket, ioServer) => {
-  socket.on("subscribe", async (channel, callback) => {
+import { Server, Socket } from "socket.io";
+
+export const registerSubscriptionHandlers = (io: Server, socket: Socket) => {
+  const subscribe = async (channel: string, callback: Function) => {
     try {
       await socket.join(channel);
 
@@ -18,12 +20,11 @@ const handleConnection = (socket, ioServer) => {
         });
       }
     }
-  });
+  };
 
-  socket.on("unsubscribe", async (channel, callback) => {
+  const unsubscribe = async (channel: string, callback: Function) => {
     try {
       await socket.leave(channel);
-
       if (typeof callback === "function") {
         callback({
           success: true,
@@ -33,20 +34,8 @@ const handleConnection = (socket, ioServer) => {
     } catch (error) {
       console.error(`Failed to unsubscribe from ${channel}:`, error);
     }
-  });
+  };
 
-  socket.on("send message", (channel, message) => {
-    try {
-      console.log(`Sending message to channel ${channel}:`, message);
-      ioServer.to(channel).emit("new message", { channel, message });
-    } catch (error) {
-      console.error(`Failed to send message to ${channel}:`, error);
-    }
-  });
-
-  socket.on("disconnect", () => {
-    console.log("Client disconnected");
-  });
+  socket.on("channel:subscribe", subscribe);
+  socket.on("channel:unsubscribe", unsubscribe);
 };
-
-module.exports = { handleConnection };
