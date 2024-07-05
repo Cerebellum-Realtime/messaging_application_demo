@@ -1,9 +1,14 @@
 import { Server, Socket } from "socket.io";
+import { DB } from "../utils/db";
 
+const db = new DB();
 export const registerSubscriptionHandlers = (io: Server, socket: Socket) => {
   const subscribe = async (channel: string, callback: Function) => {
     try {
-      await socket.join(channel);
+      const result = await Promise.all([
+        socket.join(channel),
+        db.addChannel(channel),
+      ]);
 
       if (typeof callback === "function") {
         callback({

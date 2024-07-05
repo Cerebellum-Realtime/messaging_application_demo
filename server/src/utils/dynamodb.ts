@@ -5,13 +5,16 @@ import {
   DeleteCommand,
 } from "@aws-sdk/lib-dynamodb";
 import { ddbDocClient } from "../config/dynamo";
-import { ListTablesCommand } from "@aws-sdk/client-dynamodb";
-import * as dynamoose from "dynamoose";
+import {
+  ListTablesCommand,
+  QueryCommand,
+  ScanCommand,
+} from "@aws-sdk/client-dynamodb";
 
 export async function listTables() {
   try {
     const data = await ddbDocClient.send(new ListTablesCommand({}));
-    console.log(data);
+    console.log("Current Tables: ", data.TableNames);
   } catch (err) {
     console.error("Error listing tables:", err);
   }
@@ -36,7 +39,7 @@ export async function addChannel(channel: string, message: string) {
 
 // export async function scanTable() {
 //   const params = {
-//     TableName: "Message",
+//     TableName: "channels",
 //   };
 
 //   try {
@@ -47,25 +50,25 @@ export async function addChannel(channel: string, message: string) {
 //   }
 // }
 
-// export async function queryMessageByChannel(channel: string) {
-//   const params = {
-//     TableName: "Message",
-//     KeyConditionExpression: "channel = :channel",
-//     ExpressionAttributeValues: {
-//       ":channel": { S: channel },
-//     },
-//     scanIndexForward: true,
-//   };
+export async function queryMessageByChannel(channel: string) {
+  const params = {
+    TableName: "Message",
+    KeyConditionExpression: "channel = :channel",
+    ExpressionAttributeValues: {
+      ":channel": { S: channel },
+    },
+    scanIndexForward: true,
+  };
 
-//   try {
-//     const data = await ddbDocClient.send(new QueryCommand(params));
-//     const response = data.Items?.map((item) => item.message.S);
+  try {
+    const data = await ddbDocClient.send(new QueryCommand(params));
+    const response = data.Items?.map((item) => item.message.S);
 
-//     console.log(response);
-//   } catch (error) {
-//     console.error("An error occurred with making a query:", error);
-//   }
-// }
+    console.log(response);
+  } catch (error) {
+    console.error("An error occurred with making a query:", error);
+  }
+}
 
 // export async function deleteTable() {
 //   const params = new DeleteTableCommand({
