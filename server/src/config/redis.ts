@@ -1,4 +1,6 @@
 import { Redis } from "ioredis";
+import dotenv from "dotenv";
+dotenv.config();
 
 const redisHost = process.env.REDIS_ENDPOINT_ADDRESS || "redis";
 const redisPort = parseInt(process.env.REDIS_ENDPOINT_PORT || "6379", 10);
