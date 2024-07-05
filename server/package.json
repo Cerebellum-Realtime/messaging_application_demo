@@ -8,7 +8,7 @@
     "start": "node dist/src/index.js",
     "dev": "nodemon src/index.ts",
     "test": "vitest",
-    "createTable": "ts-node ./setup/createTable.ts"
+    "createTable": "ts-node ./setup/createTables.ts"
   },
   "keywords": [],
   "author": "",

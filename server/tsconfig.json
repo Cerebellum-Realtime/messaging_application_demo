@@ -113,7 +113,7 @@
     "vitest.config.mts",
     "src/config/dynamo.ts",
     "../dynamoooooose.ts",
-    "setup/createTable.ts"
+    "setup/createTables.ts"
   ],
   "exclude": ["node_modules", "dist/**/*"]
 }

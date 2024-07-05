@@ -1,6 +1,3 @@
-import dotenv from "dotenv";
-dotenv.config();
-import { v4 as uuidv4 } from "uuid";
 import {
   PutCommand,
   GetCommand,
@@ -9,6 +6,7 @@ import {
 } from "@aws-sdk/lib-dynamodb";
 import { ddbDocClient } from "../config/dynamo";
 import { ListTablesCommand } from "@aws-sdk/client-dynamodb";
+import * as dynamoose from "dynamoose";
 
 export async function listTables() {
   try {
@@ -19,11 +17,10 @@ export async function listTables() {
   }
 }
 
-export async function putItem(channel: string, message: string) {
+export async function addChannel(channel: string, message: string) {
   const params = {
-    TableName: "Messages",
+    TableName: "Message",
     Item: {
-      id: uuidv4(),
       channel,
       message,
     },
@@ -37,58 +34,49 @@ export async function putItem(channel: string, message: string) {
   }
 }
 
-// Function to get an item from DynamoDB
-export async function getItem(id: string) {
-  const params = {
-    TableName: process.env.DYNAMODB_TABLE,
-    Key: {
-      id,
-    },
-  };
-
-  try {
-    const data = await ddbDocClient.send(new GetCommand(params));
-    console.log("Item retrieved:", data.Item);
-  } catch (err) {
-    console.error("Error retrieving item:", err);
-  }
-}
-
-// Function to update an item in DynamoDB
-// export async function updateItem(id: string, updatedMessage: string) {
+// export async function scanTable() {
 //   const params = {
-//     TableName: process.env.DYNAMODB_TABLE,
-//     Key: {
-//       id,
-//     },
-//     UpdateExpression: updatedMessage,
-//     ExpressionAttributeValues: {
-//       ":d": "Updated description",
-//     },
-//     ReturnValues: "UPDATED_NEW",
+//     TableName: "Message",
 //   };
 
 //   try {
-//     const data = await ddbDocClient.send(new UpdateCommand(params));
-//     console.log("Item updated:", data.Attributes);
-//   } catch (err) {
-//     console.error("Error updating item:", err);
+//     const data = await ddbDocClient.send(new ScanCommand(params));
+//     console.log(data.Items);
+//   } catch (error) {
+//     console.error("An error occurred scanning the table:", error);
 //   }
 // }
 
-// Function to delete an item from DynamoDB
-// export async function deleteItem() {
+// export async function queryMessageByChannel(channel: string) {
 //   const params = {
-//     TableName: process.env.DYNAMODB_TABLE,
-//     Key: {
-//       id: "12345",
+//     TableName: "Message",
+//     KeyConditionExpression: "channel = :channel",
+//     ExpressionAttributeValues: {
+//       ":channel": { S: channel },
 //     },
+//     scanIndexForward: true,
 //   };
 
 //   try {
-//     const data = await ddbDocClient.send(new DeleteCommand(params));
-//     console.log("Item deleted:", data);
-//   } catch (err) {
-//     console.error("Error deleting item:", err);
+//     const data = await ddbDocClient.send(new QueryCommand(params));
+//     const response = data.Items?.map((item) => item.message.S);
+
+//     console.log(response);
+//   } catch (error) {
+//     console.error("An error occurred with making a query:", error);
+//   }
+// }
+
+// export async function deleteTable() {
+//   const params = new DeleteTableCommand({
+//     TableName: "Message",
+//   });
+
+//   try {
+//     const response = await ddbDocClient.send(params);
+//     console.log(response);
+//     return response;
+//   } catch (error) {
+//     console.error("An error occurred deleting the table:", error);
 //   }
 // }
