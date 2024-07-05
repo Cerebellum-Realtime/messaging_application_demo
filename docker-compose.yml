@@ -7,6 +7,12 @@ services:
     ports:
       - "6379:6379"
 
+  dynamodb-local:
+    image: amazon/dynamodb-local
+    container_name: dynamodb-local
+    ports:
+      - "8001:8000"
+
   # app:
   #   build:
   #     context: ./server

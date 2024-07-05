@@ -7,18 +7,23 @@
     "build": "npx tsc",
     "start": "node dist/src/index.js",
     "dev": "nodemon src/index.ts",
-    "test": "vitest"
+    "test": "vitest",
+    "createTable": "ts-node ./setup/createTable.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.609.0",
+    "@aws-sdk/lib-dynamodb": "^3.610.0",
     "@socket.io/redis-adapter": "^8.3.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
+    "dynamoose": "^4.0.1",
     "express": "^4.19.2",
     "ioredis": "^5.4.1",
     "socket.io": "^4.7.5",
+    "uuid": "^10.0.0",
     "vitest": "^1.6.0"
   },
   "devDependencies": {
