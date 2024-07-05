@@ -9,7 +9,7 @@ const Channel = ({ toggleJoinChannel, toggleLeaveChannel, currentChannel }) => {
     event.preventDefault();
     const channelNameLower = channelNameField.toLowerCase();
 
-    socket.emit("subscribe", channelNameLower, (response) => {
+    socket.emit("channel:subscribe", channelNameLower, (response) => {
       if (response.success) {
         toggleJoinChannel(channelNameLower);
         setChannelNameField("");
@@ -21,7 +21,7 @@ const Channel = ({ toggleJoinChannel, toggleLeaveChannel, currentChannel }) => {
 
   const handleLeaveChannel = (event) => {
     event.preventDefault();
-    socket.emit("unsubscribe", currentChannel);
+    socket.emit("channel:unsubscribe", currentChannel);
     toggleLeaveChannel();
   };
 

@@ -8,7 +8,7 @@ const SendMessageForm = ({ user, currentChannel }) => {
   const sendMessage = (event) => {
     event.preventDefault();
     const messageSend = `${user}: ${messageField}`;
-    socket.emit("send message", currentChannel, messageSend);
+    socket.emit("message:send", currentChannel, messageSend);
     setMessageField("");
   };
 

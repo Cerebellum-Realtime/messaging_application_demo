@@ -18,11 +18,11 @@ const App = () => {
 
     if (user) {
       socket.connect();
-      socket.on("new message", handleMessage);
+      socket.on("message:receive", handleMessage);
     }
 
     return () => {
-      socket.off("new message", handleMessage);
+      socket.off("message:receive", handleMessage);
       if (socket.connected) {
         socket.disconnect();
       }

@@ -2,13 +2,13 @@ import dotenv from "dotenv";
 import http from "http";
 import app from "./app";
 import { Server } from "socket.io";
-const port = process.env.PORT || 5001;
-dotenv.config();
 import { Socket } from "socket.io";
 import { registerSubscriptionHandlers } from "./handlers/subscriptionHandler";
 import { registerMessageHandlers } from "./handlers/messageHandler";
 import { pub, sub } from "./config/redis";
 import { createAdapter } from "@socket.io/redis-adapter";
+dotenv.config();
+const port = process.env.PORT || 8000;
 
 const server = http.createServer(app);
 const io = new Server(server, {
