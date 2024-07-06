@@ -1,17 +1,23 @@
-import { Server, Socket } from "socket.io"
+import { Server, Socket } from "socket.io";
+import { DB } from "../utils/db";
+
+const db = new DB();
 
 export const registerMessageHandlers = (io: Server, socket: Socket) => {
-  const sendMessage = async (channel: string, message: string) => {
+  const sendMessage = async (
+    channelId: string,
+    channelName: string,
+    message: string
+  ) => {
     try {
-      console.log(`Sending message to channel ${channel}:`, message);
-
-      const modifiedMessage = `${message}`;
-      io.to(channel).emit("message:receive", {
-        channel,
-        message: modifiedMessage,
+      await db.saveMessage(channelId, message);
+      io.to(channelName).emit("message:receive", {
+        channelName,
+        message,
       });
+      console.log(`Sending message to channel ${channelName}:`, message);
     } catch (error) {
-      console.error(`Failed to send message to ${channel}:`, error);
+      console.error(`Failed to send message to ${channelName}:`, error);
     }
   };
 

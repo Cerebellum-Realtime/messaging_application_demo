@@ -9,11 +9,21 @@ export const registerSubscriptionHandlers = (io: Server, socket: Socket) => {
         socket.join(channel),
         db.addChannel(channel),
       ]);
+      const channelInfo = {
+        channelName: channel,
+        channelId: result[1],
+      };
 
+      const pastMessages = await db.getMessagesForChannel(
+        channelInfo.channelId
+      );
+      
       if (typeof callback === "function") {
         callback({
           success: true,
           message: `Successfully subscribed to ${channel}`,
+          channelInfo,
+          pastMessages,
         });
       }
     } catch (error) {

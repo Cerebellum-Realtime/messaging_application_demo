@@ -8,9 +8,9 @@ async function createChannelsTable() {
   const params: CreateTableCommandInput = {
     TableName: "channels",
     KeySchema: [
-      { AttributeName: "channelId", KeyType: "HASH" }, // Partition key
+      { AttributeName: "channelName", KeyType: "HASH" }, // Partition key
     ],
-    AttributeDefinitions: [{ AttributeName: "channelId", AttributeType: "S" }],
+    AttributeDefinitions: [{ AttributeName: "channelName", AttributeType: "S" }],
     ProvisionedThroughput: {
       ReadCapacityUnits: 5,
       WriteCapacityUnits: 5,
@@ -27,7 +27,7 @@ async function createChannelsTable() {
 
 async function createMessagesTable() {
   const params: CreateTableCommandInput = {
-    TableName: "Messages",
+    TableName: "messages",
     KeySchema: [
       { AttributeName: "channelId", KeyType: "HASH" },
       { AttributeName: "messageId", KeyType: "RANGE" },

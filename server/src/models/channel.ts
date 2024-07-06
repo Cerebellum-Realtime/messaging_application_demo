@@ -1,14 +1,13 @@
 import { Schema, model } from "dynamoose";
 
 export const channelSchema = new Schema({
-  channelId: {
+  channelName: {
     type: String,
     hashKey: true,
   },
-  channelName: {
+  channelId: {
     type: String,
-    index: true
   },
 });
 
-export const Channel = model("Channel", channelSchema);
+export const Channel = model("channels", channelSchema);

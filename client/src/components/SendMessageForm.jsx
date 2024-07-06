@@ -4,11 +4,11 @@ import { useState } from "react";
 
 const SendMessageForm = ({ user, currentChannel }) => {
   const [messageField, setMessageField] = useState("");
-
+  const { channelId, channelName } = currentChannel;
   const sendMessage = (event) => {
     event.preventDefault();
     const messageSend = `${user}: ${messageField}`;
-    socket.emit("message:send", currentChannel, messageSend);
+    socket.emit("message:send", channelId, channelName, messageSend);
     setMessageField("");
   };
 
