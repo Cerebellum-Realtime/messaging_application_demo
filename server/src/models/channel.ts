@@ -1,5 +1,10 @@
 import { Schema, model } from "dynamoose";
+import { Item } from "dynamoose/dist/Item";
 
+interface Channel extends Item {
+  channelName: string;
+  channelId: string;
+}
 export const channelSchema = new Schema({
   channelName: {
     type: String,
@@ -10,4 +15,4 @@ export const channelSchema = new Schema({
   },
 });
 
-export const Channel = model("channels", channelSchema);
+export const Channel = model<Channel>("channels", channelSchema);

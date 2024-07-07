@@ -14,10 +14,10 @@ export const registerSubscriptionHandlers = (io: Server, socket: Socket) => {
         channelId: result[1],
       };
 
-      const pastMessages = await db.getMessagesForChannel(
+      const pastMessages = await db.getAllMessagesForChannel(
         channelInfo.channelId
       );
-      
+
       if (typeof callback === "function") {
         callback({
           success: true,

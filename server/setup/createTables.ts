@@ -10,7 +10,9 @@ async function createChannelsTable() {
     KeySchema: [
       { AttributeName: "channelName", KeyType: "HASH" }, // Partition key
     ],
-    AttributeDefinitions: [{ AttributeName: "channelName", AttributeType: "S" }],
+    AttributeDefinitions: [
+      { AttributeName: "channelName", AttributeType: "S" },
+    ],
     ProvisionedThroughput: {
       ReadCapacityUnits: 5,
       WriteCapacityUnits: 5,
@@ -30,11 +32,11 @@ async function createMessagesTable() {
     TableName: "messages",
     KeySchema: [
       { AttributeName: "channelId", KeyType: "HASH" },
-      { AttributeName: "messageId", KeyType: "RANGE" },
+      { AttributeName: "createdAt_messageId", KeyType: "RANGE" },
     ],
     AttributeDefinitions: [
       { AttributeName: "channelId", AttributeType: "S" },
-      { AttributeName: "messageId", AttributeType: "S" },
+      { AttributeName: "createdAt_messageId", AttributeType: "S" },
     ],
     ProvisionedThroughput: {
       ReadCapacityUnits: 5,

@@ -48,16 +48,43 @@ export class DB {
     }
   }
 
-  async getMessagesForChannel(channelId: string) {
+  async getAllMessagesForChannel(channelId: string) {
     try {
       const messages = await Message.query("channelId").eq(channelId).exec();
 
-      const sortedMessages = messages.sort((a, b) => a.createdAt - b.createdAt);
-
-      const contents = sortedMessages.map((message) => message.content);
+      const contents = messages.map((message) => message.content);
       return contents;
     } catch (error) {
       console.error("Error retrieving messages for channel:", error);
+      throw error;
+    }
+  }
+
+  async getMessagesForChannelPaginated(
+    channelId: string,
+    limit: number = 50,
+    lastEvaluatedKey?: any
+  ) {
+    try {
+      let query = Message.query("channelId")
+        .eq(channelId)
+        .sort("descending")
+        .limit(limit);
+
+      if (lastEvaluatedKey) {
+        query = query.startAt(lastEvaluatedKey);
+      }
+
+      const result = await query.exec();
+
+      const contents = result.map((message) => message.content);
+
+      return {
+        messages: contents,
+        lastEvaluatedKey: result.lastKey,
+      };
+    } catch (error) {
+      console.error("Error fetching messages:", error);
       throw error;
     }
   }
