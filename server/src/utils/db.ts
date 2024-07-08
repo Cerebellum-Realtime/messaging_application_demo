@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import { Channel } from "../models/channel";
 import { Message } from "../models/message";
-import { a } from "vitest/dist/suite-IbNSsUWN";
+
 export class DB {
   async addChannel(channelName: string): Promise<string> {
     try {

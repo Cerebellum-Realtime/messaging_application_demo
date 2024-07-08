@@ -111,9 +111,10 @@
   "include": [
     "src",
     "vitest.config.mts",
-    "src/config/dynamo.ts",
+    "setup/dynamo.ts",
     "../dynamoooooose.ts",
-    "setup/createTables.ts"
-  ],
+    "setup/createTables.ts",
+    "zfiles/dynamodb.ts"
+, "setup/dynamodb.ts"  ],
   "exclude": ["node_modules", "dist/**/*"]
 }

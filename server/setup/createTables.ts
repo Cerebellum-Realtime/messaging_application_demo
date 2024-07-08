@@ -2,7 +2,7 @@ import {
   CreateTableCommand,
   CreateTableCommandInput,
 } from "@aws-sdk/client-dynamodb";
-import { ddbDocClient } from "../src/config/dynamo";
+import { ddbDocClient } from "./dynamo";
 
 async function createChannelsTable() {
   const params: CreateTableCommandInput = {

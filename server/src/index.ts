@@ -8,13 +8,12 @@ import { registerMessageHandlers } from "./handlers/messageHandler";
 import { registerDisconnection } from "./handlers/disconnection";
 import { pub, sub } from "./config/redis";
 import { createAdapter } from "@socket.io/redis-adapter";
-import { listTables } from "./utils/dynamodb";
 import * as dynamoose from "dynamoose";
+
 dotenv.config();
 
 const port = process.env.PORT || 8000;
 const server = http.createServer(app);
-dynamoose.aws.ddb.local("http://localhost:8001");
 
 const io = new Server(server, {
   cors: {
@@ -32,8 +31,6 @@ const onConnection = (socket: Socket) => {
 };
 
 io.on("connection", onConnection);
-
-listTables();
 
 server.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
