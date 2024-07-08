@@ -13,10 +13,7 @@ dotenv.config();
 
 const port = process.env.PORT || 8000;
 const server = http.createServer(app);
-// Create new DynamoDB instance
 const ddb = new dynamoose.aws.ddb.DynamoDB();
-
-// Set DynamoDB instance to the Dynamoose DDB instance
 dynamoose.aws.ddb.set(ddb);
 
 const io = new Server(server, {

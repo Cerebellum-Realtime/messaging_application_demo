@@ -7,6 +7,7 @@ interface Message extends Item {
   createdAt_messageId: string;
   content: string;
 }
+
 // Define the schema
 const messageSchema = new dynamoose.Schema({
   channelId: {

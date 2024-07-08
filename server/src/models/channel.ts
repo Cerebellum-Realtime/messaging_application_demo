@@ -5,6 +5,7 @@ interface Channel extends Item {
   channelName: string;
   channelId: string;
 }
+
 export const channelSchema = new Schema({
   channelName: {
     type: String,
@@ -12,6 +13,7 @@ export const channelSchema = new Schema({
   },
   channelId: {
     type: String,
+    required: true,
   },
 });
 
