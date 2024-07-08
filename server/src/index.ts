@@ -13,8 +13,19 @@ dotenv.config();
 
 const port = process.env.PORT || 8000;
 const server = http.createServer(app);
-const ddb = new dynamoose.aws.ddb.DynamoDB();
-dynamoose.aws.ddb.set(ddb);
+
+if (process.env.NODE_ENV === "development") {
+  dynamoose.aws.ddb.local("http://localhost:8001");
+} else {
+  // Create new DynamoDB instance
+  const ddb = new dynamoose.aws.ddb.DynamoDB();
+  // Set DynamoDB instance to the Dynamoose DDB instance
+  dynamoose.aws.ddb.set(ddb);
+}
+
+// If you are running Dynamoose in an environment that has an IAM role attached to it (ex. Lambda or EC2),
+// you do not need to do any additional configuration so
+// long as your IAM role has appropriate permissions to access DynamoDB.
 
 const io = new Server(server, {
   cors: {
