@@ -90,6 +90,10 @@ p.welcome {
   display: flex;
 }
 
+.queue {
+  border-top: solid #f0f0f0 1px;
+}
+
 .userName {
   display: flex;
 }
