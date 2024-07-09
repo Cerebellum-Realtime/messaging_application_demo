@@ -1,43 +1,36 @@
 import { SQSClient, SendMessageCommand } from "@aws-sdk/client-sqs";
+import { v4 as uuidv4 } from "uuid";
+import dotenv from "dotenv";
+dotenv.config();
 
-interface messageBodyType {
-  event: string;
-  userId: string;
-  timestamp: number;
-}
-
-// AWS.config.update({ region: "us-east-1" });
+const queueUrl: string = process.env.QUEUE_URL || "";
 // Create an SQS client
-const sqs = new SQSClient({});
+const sqs = new SQSClient({ endpoint: queueUrl });
 
 // Function to send a message to the SQS queue
 export const sendMessageToQueue = async (
-  messageBody: messageBodyType
+  channelId: string,
+  message: string,
+  sendDescription: string
 ): Promise<void> => {
   // Use the queue URL from an environment variable or configuration
-  const queueUrl =
-    "https://sqs.us-east-2.amazonaws.com/654654177904/WebSocketServerStack-ALBEventQueueQueueB68FE5CF-jkoFbrK83iSU";
 
+  // we create messageId and createdAt time
   const params = {
     QueueUrl: queueUrl,
-    MessageBody: JSON.stringify(messageBody),
+    MessageBody: JSON.stringify({
+      channelId,
+      createdAt_messageId: `${Date.now()
+        .toString()
+        .padStart(20, "0")}_${uuidv4()}`,
+      content: `${channelId}: ${message} => ${sendDescription}`,
+    }),
   };
 
   try {
-    // const response = await sqs.send(command);
-
     const result = await sqs.send(new SendMessageCommand(params));
     console.log("Message sent:", result.MessageId);
   } catch (error) {
     console.error("Error sending message:", error);
   }
 };
-
-// Example usage
-const messageBody: messageBodyType = {
-  event: "user_signup",
-  userId: "12345",
-  timestamp: Date.now(),
-};
-
-sendMessageToQueue(messageBody);

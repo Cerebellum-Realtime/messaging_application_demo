@@ -1,7 +1,10 @@
 import { Server, Socket } from "socket.io";
-import { DB } from "../utils/db";
+// import { DB } from "../utils/db";
+import { sendMessageToQueue } from "../utils/queue";
 
-const db = new DB();
+// import
+
+// const db = new DB();
 
 export const registerQueueHandlers = (io: Server, socket: Socket) => {
   const sendMessage = async (
@@ -10,14 +13,17 @@ export const registerQueueHandlers = (io: Server, socket: Socket) => {
     message: string
   ) => {
     try {
-      // TODO: send thru queue instead... 
-      await db.saveMessage(channelId, message); 
+      const sendDescription = "sent thru queue";
 
+      // TODO: send thru queue instead...
+      // await db.saveMessage(channelId, message);
+
+      sendMessageToQueue(channelId, message, sendDescription);
       // Still publish to user to maintain highest availability
       io.to(channelName).emit("message:receive", {
         channelName,
         message,
-        sendDescription: "sent thru queue",
+        sendDescription,
       });
       console.log(`Sending message to channel ${channelName}:`, message);
     } catch (error) {
