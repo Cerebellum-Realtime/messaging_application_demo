@@ -5,6 +5,7 @@ import Username from "./components/Username";
 import Channel from "./components/Channel";
 import SendMessageForm from "./components/SendMessageForm";
 import DisplayMessages from "./components/DisplayMessages";
+import SendQueueForm from "./components/SendQueueForm";
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -13,7 +14,10 @@ const App = () => {
 
   useEffect(() => {
     const handleMessage = (data) => {
-      setMessages((prevMessages) => [...prevMessages, data.message]);
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        `${data.message} => ${data.sendDescription}`,
+      ]);
     };
 
     if (user) {
@@ -61,6 +65,7 @@ const App = () => {
             <>
               <DisplayMessages messages={messages} />
               <SendMessageForm user={user} currentChannel={currentChannel} />
+              <SendQueueForm user={user} currentChannel={currentChannel} />
             </>
           )}
         </>

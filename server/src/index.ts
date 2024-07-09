@@ -5,6 +5,7 @@ import { Server } from "socket.io";
 import { Socket } from "socket.io";
 import { registerSubscriptionHandlers } from "./handlers/subscriptionHandler";
 import { registerMessageHandlers } from "./handlers/messageHandler";
+import { registerQueueHandlers } from "./handlers/queueHandler";
 import { registerDisconnection } from "./handlers/disconnection";
 import { pub, sub } from "./config/redis";
 import { createAdapter } from "@socket.io/redis-adapter";
@@ -39,6 +40,7 @@ io.adapter(createAdapter(pub, sub));
 const onConnection = (socket: Socket) => {
   registerSubscriptionHandlers(io, socket);
   registerMessageHandlers(io, socket);
+  registerQueueHandlers(io, socket);
   registerDisconnection(socket);
 };
 
