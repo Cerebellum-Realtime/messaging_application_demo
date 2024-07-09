@@ -5,7 +5,7 @@ dotenv.config();
 
 const queueUrl: string = process.env.QUEUE_URL || "";
 // Create an SQS client
-const sqs = new SQSClient({ endpoint: queueUrl });
+const sqs = new SQSClient();
 
 // Function to send a message to the SQS queue
 export const sendMessageToQueue = async (
