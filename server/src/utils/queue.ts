@@ -23,7 +23,7 @@ export const sendMessageToQueue = async (
       createdAt_messageId: `${Date.now()
         .toString()
         .padStart(20, "0")}_${uuidv4()}`,
-      content: `${channelId}: ${message} => ${sendDescription}`,
+      content: `${message} => ${sendDescription}`,
     }),
   };
 

@@ -36,7 +36,6 @@ export class DB {
   async saveMessage(channelId: string, content: string) {
     try {
       const newMessage = new Message({
-        messageId: uuidv4(), // Example: Generate a unique messageId
         channelId: channelId,
         content: content,
       });
