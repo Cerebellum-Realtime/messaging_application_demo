@@ -1,14 +1,13 @@
 /* eslint-disable react/prop-types */
-import { socket } from "../socket";
 import { useState } from "react";
 
-const SendMessageForm = ({ user, currentChannel }) => {
+const SendMessageForm = ({ user, publish }) => {
   const [messageField, setMessageField] = useState("");
-  const { channelId, channelName } = currentChannel;
+
   const sendMessage = (event) => {
     event.preventDefault();
     const messageSend = `${user}: ${messageField}`;
-    socket.emit("message:send", channelId, channelName, messageSend);
+    publish(messageSend);
     setMessageField("");
   };
 

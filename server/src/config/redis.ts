@@ -21,3 +21,9 @@ export const pub = new Redis(redisConfig)
   .on("error", (error) => {
     console.error("Publisher Redis client error:", error);
   });
+
+export const redisClient = new Redis(redisConfig)
+  .on("ready", () => console.log("redisClient Ready"))
+  .on("error", (error) => {
+    console.error("Redis client error:", error);
+  });

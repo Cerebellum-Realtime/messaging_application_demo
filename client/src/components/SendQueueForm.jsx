@@ -1,23 +1,13 @@
 /* eslint-disable react/prop-types */
-import { socket } from "../socket";
 import { useState } from "react";
 
-const SendQueueForm = ({ user, currentChannel }) => {
+const SendQueueForm = ({ user, queue }) => {
   const [queueField, setQueueField] = useState("");
 
-  const { channelId, channelName } = currentChannel;
-
-  /*
-  {
-    ChannelId
-    ChannelName
- }
-  */
   const sendMessage = (event) => {
     event.preventDefault();
     const messageSend = `${user}: ${queueField}`;
-    socket.emit("message:queue", channelId, channelName, messageSend);
-    setQueueField("");
+    queue(messageSend);
   };
 
   return (
