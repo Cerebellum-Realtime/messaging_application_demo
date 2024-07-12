@@ -5,7 +5,6 @@ import SendMessageForm from "./SendMessageForm";
 import SendQueueForm from "./SendQueueForm";
 import useChannel from "../customHooks/useChannel";
 import usePresence from "../customHooks/usePresence";
-import usePresenceListener from "../customHooks/usePresenceListener";
 
 const MessageDisplay = ({ currentChannel, user, toggleLeaveChannel }) => {
   const [messages, setMessages] = useState([]);
@@ -23,9 +22,9 @@ const MessageDisplay = ({ currentChannel, user, toggleLeaveChannel }) => {
     handleMessage
   );
 
-  const { updateUserInfo } = usePresence(currentChannel, { user });
-
-  const { presenceData } = usePresenceListener(currentChannel);
+  const { presenceData } = usePresence(currentChannel, {
+    user,
+  });
 
   const handleLeaveChannel = (event) => {
     event.preventDefault();
@@ -33,7 +32,6 @@ const MessageDisplay = ({ currentChannel, user, toggleLeaveChannel }) => {
     toggleLeaveChannel();
   };
 
-  console.log(updateUserInfo);
   return (
     <>
       <div className="channel-info-container">
