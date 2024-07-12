@@ -10,6 +10,7 @@ import { registerDisconnection } from "./handlers/disconnection";
 import { pub, sub } from "./config/redis";
 import { createAdapter } from "@socket.io/redis-adapter";
 import * as dynamoose from "dynamoose";
+import { registerPresenceHandlers } from "./handlers/presenceHandler";
 dotenv.config();
 
 const port = process.env.PORT || 8000;
@@ -33,14 +34,17 @@ const io = new Server(server, {
     origin: "*",
     methods: ["GET", "POST"],
   },
+  pingInterval: 5000,
 });
 
 io.adapter(createAdapter(pub, sub));
 
 const onConnection = (socket: Socket) => {
+  console.log(socket.id, " connected");
   registerSubscriptionHandlers(io, socket);
   registerMessageHandlers(io, socket);
   registerQueueHandlers(io, socket);
+  registerPresenceHandlers(io, socket);
   registerDisconnection(socket);
 };
 

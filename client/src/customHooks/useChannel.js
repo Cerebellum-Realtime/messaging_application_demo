@@ -35,19 +35,13 @@ const useChannel = (channelName, setPreviousMessages, callback) => {
 
     // Cleanup on unmount
     return () => {
-      socket.emit(
-        `message:receive:${currentChannel}`,
-        currentChannel,
-        (ack) => {
-          if (ack.success) {
-            console.log(`Unsubscribed from channel ${currentChannel}`);
-          } else {
-            console.error(
-              `Failed to unsubscribe from channel ${currentChannel}`
-            );
-          }
+      socket.emit(`channel:unsubscribe`, currentChannel, (ack) => {
+        if (ack.success) {
+          console.log(`Unsubscribed from channel ${currentChannel}`);
+        } else {
+          console.error(`Failed to unsubscribe from channel ${currentChannel}`);
         }
-      );
+      });
       socket.off("message:receive", handleMessageReceive);
     };
   }, [memoizedSetPreviousMessages, currentChannel]);
