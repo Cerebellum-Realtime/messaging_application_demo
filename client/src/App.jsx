@@ -10,16 +10,29 @@ const App = () => {
   const [currentChannel, setCurrentChannel] = useState(null);
 
   useEffect(() => {
-    if (user) {
-      socket.connect();
-    }
+    socket.on("connect", () => {
+      console.log("recovered?", socket.id, socket.recovered);
+
+      // closes the low-level connection and trigger a reconnection
+      // To use in test suite for testing purposes
+      // setTimeout(() => {
+      //   socket.io.engine.close();
+      // }, Math.random() * 5000 + Math.random() * 5000);
+    });
+
+    socket.on("recovery:enable", () => {
+      console.log("recovery has been enabled");
+    });
+
+    socket.on("disconnect", (reason) => {
+      console.log(`Disconnected: ${reason}`);
+    });
 
     return () => {
-      if (socket.connected) {
-        socket.disconnect();
-      }
+      socket.off("connect");
+      socket.off("disconnect");
     };
-  }, [user]);
+  }, []);
 
   const handleUsernameSubmit = (username) => {
     setUser(username);
