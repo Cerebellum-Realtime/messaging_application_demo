@@ -20,18 +20,32 @@ const App = () => {
       ]);
     };
 
-    if (user) {
-      socket.connect();
-      socket.on("message:receive", handleMessage);
-    }
+    socket.on("connect", () => {
+      console.log("recovered?", socket.id, socket.recovered);
+
+      // closes the low-level connection and trigger a reconnection
+      // To use in test suite for testing purposes
+      // setTimeout(() => {
+      //   socket.io.engine.close();
+      // }, Math.random() * 5000 + Math.random() * 5000);
+    });
+
+    socket.on("recovery:enable", () => {
+      console.log("recovery has been enabled");
+    });
+
+    socket.on("message:receive", handleMessage);
+
+    socket.on("disconnect", (reason) => {
+      console.log(`Disconnected: ${reason}`);
+    });
 
     return () => {
+      socket.off("connect");
       socket.off("message:receive", handleMessage);
-      if (socket.connected) {
-        socket.disconnect();
-      }
+      socket.off("disconnect");
     };
-  }, [user]);
+  }, []);
 
   const handleUsernameSubmit = (username) => {
     setUser(username);

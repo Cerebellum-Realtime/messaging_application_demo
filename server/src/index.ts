@@ -1,14 +1,13 @@
 import dotenv from "dotenv";
 import http from "http";
 import app from "./app";
-import { Server } from "socket.io";
-import { Socket } from "socket.io";
+import { Server, Socket } from "socket.io";
 import { registerSubscriptionHandlers } from "./handlers/subscriptionHandler";
 import { registerMessageHandlers } from "./handlers/messageHandler";
 import { registerQueueHandlers } from "./handlers/queueHandler";
 import { registerDisconnection } from "./handlers/disconnection";
-import { pub, sub } from "./config/redis";
-import { createAdapter } from "@socket.io/redis-adapter";
+import { pub } from "./config/redis";
+import { createAdapter } from "@socket.io/redis-streams-adapter";
 import * as dynamoose from "dynamoose";
 dotenv.config();
 
@@ -29,15 +28,28 @@ if (process.env.NODE_ENV === "development") {
 // long as your IAM role has appropriate permissions to access DynamoDB.
 
 const io = new Server(server, {
+  transports: ["websocket"],
+  pingInterval: 10000, // defines length of time each ping packet is sent to ensure connection is still valid; setting to 10s for testing purposes
+  pingTimeout: 10000, // defines length of time for the client to rend a pong packet before considering disconnected; setting to 10s for testing
+
+  // the server will store the `id`, the rooms, and the `data` attribute of the socket
+  connectionStateRecovery: {
+    // the backup duration of the sessions and the packets
+    maxDisconnectionDuration: 2 * 60 * 1000, // 2mins
+
+    // whether to skip middlewares upon successful recovery
+    skipMiddlewares: false,
+  },
   cors: {
     origin: "*",
     methods: ["GET", "POST"],
   },
 });
 
-io.adapter(createAdapter(pub, sub));
+io.adapter(createAdapter(pub));
 
 const onConnection = (socket: Socket) => {
+  io.emit("recovery:enable"); // Nominal – the server must send at least one event in order to initialize the offset on the client side
   registerSubscriptionHandlers(io, socket);
   registerMessageHandlers(io, socket);
   registerQueueHandlers(io, socket);
