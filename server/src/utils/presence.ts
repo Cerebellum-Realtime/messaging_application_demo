@@ -104,7 +104,6 @@ export class ChannelPresenceManager {
     updatedUserInfo: UserInfo
   ) {
     const userKey = createChannelUserKey(channelName, socketId);
-
     const userInfo = await this.redis.hgetall(userKey);
     const mergedUserInfo = { ...userInfo, ...updatedUserInfo };
     await this.redis.hmset(userKey, mergedUserInfo);

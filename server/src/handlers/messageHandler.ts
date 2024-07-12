@@ -10,6 +10,7 @@ export const registerMessageHandlers = (io: Server, socket: Socket) => {
     message: string
   ) => {
     try {
+      // io.emit("message:confirmed");
       await db.saveMessage(channelId, message);
       io.to(channelName).emit(`message:receive:${channelName}`, {
         channelName,

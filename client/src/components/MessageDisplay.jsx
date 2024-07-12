@@ -5,8 +5,14 @@ import SendMessageForm from "./SendMessageForm";
 import SendQueueForm from "./SendQueueForm";
 import useChannel from "../customHooks/useChannel";
 import usePresence from "../customHooks/usePresence";
+import ChangeUserName from "./ChangeUserName";
 
-const MessageDisplay = ({ currentChannel, user, toggleLeaveChannel }) => {
+const MessageDisplay = ({
+  currentChannel,
+  user,
+  toggleLeaveChannel,
+  toggleChangeUser,
+}) => {
   const [messages, setMessages] = useState([]);
 
   const handleMessage = (data) => {
@@ -22,7 +28,7 @@ const MessageDisplay = ({ currentChannel, user, toggleLeaveChannel }) => {
     handleMessage
   );
 
-  const { presenceData } = usePresence(currentChannel, {
+  const { presenceData, updateUserInfo } = usePresence(currentChannel, {
     user,
   });
 
@@ -30,6 +36,11 @@ const MessageDisplay = ({ currentChannel, user, toggleLeaveChannel }) => {
     event.preventDefault();
     setMessages([]);
     toggleLeaveChannel();
+  };
+
+  const handleChangeUser = (newUserName) => {
+    toggleChangeUser(newUserName);
+    updateUserInfo({ user: newUserName });
   };
 
   return (
@@ -47,6 +58,7 @@ const MessageDisplay = ({ currentChannel, user, toggleLeaveChannel }) => {
       <DisplayMessages messages={messages} />
       <SendMessageForm user={user} publish={publish} />
       <SendQueueForm user={user} queue={queue} />
+      <ChangeUserName user={user} toggleChangeUser={handleChangeUser} />
     </>
   );
 };

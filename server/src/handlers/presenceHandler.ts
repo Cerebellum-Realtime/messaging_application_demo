@@ -123,6 +123,7 @@ export const registerPresenceHandlers = (io: Server, socket: Socket) => {
         channelName,
         updatedUserInfo
       );
+
       io.to(`presence:${channelName}`).emit(
         `presence:${channelName}:update`,
         result

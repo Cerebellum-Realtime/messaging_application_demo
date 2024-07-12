@@ -30,8 +30,8 @@ if (process.env.NODE_ENV === "development") {
 
 const io = new Server(server, {
   transports: ["websocket"],
-  pingInterval: 10000, // defines length of time each ping packet is sent to ensure connection is still valid; setting to 10s for testing purposes
-  pingTimeout: 10000, // defines length of time for the client to rend a pong packet before considering disconnected; setting to 10s for testing
+  pingInterval: 1000, // defines length of time each ping packet is sent to ensure connection is still valid; setting to 10s for testing purposes
+  pingTimeout: 1000, // defines length of time for the client to rend a pong packet before considering disconnected; setting to 10s for testing
 
   // the server will store the `id`, the rooms, and the `data` attribute of the socket
   connectionStateRecovery: {

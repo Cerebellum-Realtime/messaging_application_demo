@@ -10,29 +10,22 @@ const App = () => {
   const [currentChannel, setCurrentChannel] = useState(null);
 
   useEffect(() => {
-    socket.on("connect", () => {
-      console.log("recovered?", socket.id, socket.recovered);
+    if (user) {
+      socket.connect();
+      socket.on("recovery:enable", () => {
+        console.log("recovery has been enabled");
+      });
 
-      // closes the low-level connection and trigger a reconnection
-      // To use in test suite for testing purposes
-      // setTimeout(() => {
-      //   socket.io.engine.close();
-      // }, Math.random() * 5000 + Math.random() * 5000);
-    });
-
-    socket.on("recovery:enable", () => {
-      console.log("recovery has been enabled");
-    });
-
-    socket.on("disconnect", (reason) => {
-      console.log(`Disconnected: ${reason}`);
-    });
+      socket.on("disconnect", (reason) => {
+        console.log(`Disconnected: ${reason}`);
+      });
+    }
 
     return () => {
       socket.off("connect");
       socket.off("disconnect");
     };
-  }, []);
+  }, [user]);
 
   const handleUsernameSubmit = (username) => {
     setUser(username);
@@ -46,6 +39,10 @@ const App = () => {
 
   const handleJoinChannel = (channelName) => {
     setCurrentChannel(channelName);
+  };
+
+  const handleChangeUser = (newUserName) => {
+    setUser(newUserName);
   };
 
   return (
@@ -66,6 +63,7 @@ const App = () => {
               currentChannel={currentChannel}
               user={user}
               toggleLeaveChannel={handleLeaveChannel}
+              toggleChangeUser={handleChangeUser}
             />
           )}
         </>

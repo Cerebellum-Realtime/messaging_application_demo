@@ -55,3 +55,6 @@
   - Validate that the application can work with the elasticache, and it has the permissions
 # Clean up the css
 # Test changing the username
+
+# How to handle when a server goes down
+  - 
