@@ -1,21 +1,29 @@
 import { useState } from "react";
+import axios from "axios";
+import { socket } from "../socket";
 
 /* eslint-disable react/prop-types */
-const Username = ({ toggleUsernameSubmit }) => {
-  const [usernameField, setUsernameField] = useState("");
+const Username = ({ toggleUsernameSubmit, onSetToken }) => {
+  const [username, setUsername] = useState("");
 
-  const handleUsernameFieldSubmit = (event) => {
+  const handleUsernameSubmit = async (event) => {
     event.preventDefault();
-    toggleUsernameSubmit(usernameField);
-    setUsernameField("");
+
+    const { data } = await axios.post("/login", {
+      // http://localhost:5173/login
+      username,
+    });
+    socket.auth.token = data;
+    toggleUsernameSubmit(username);
   };
+
   return (
-    <form className="userName" onSubmit={handleUsernameFieldSubmit}>
+    <form className="userName" onSubmit={handleUsernameSubmit}>
       <input
         type="text"
         placeholder="Enter your username"
-        value={usernameField}
-        onChange={(e) => setUsernameField(e.target.value)}
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
       />
       <button type="submit">Login</button>
     </form>

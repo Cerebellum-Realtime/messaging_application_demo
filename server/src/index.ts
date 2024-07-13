@@ -10,6 +10,8 @@ import { registerDisconnection } from "./handlers/disconnection";
 import { pub, sub } from "./config/redis";
 import { createAdapter } from "@socket.io/redis-adapter";
 import * as dynamoose from "dynamoose";
+import { authenticate } from "./middleware/authenticate";
+
 dotenv.config();
 
 const port = process.env.PORT || 8000;
@@ -33,6 +35,15 @@ const io = new Server(server, {
     origin: "*",
     methods: ["GET", "POST"],
   },
+  pingInterval: 1000,
+  pingTimeout: 1000,
+  connectionStateRecovery: {
+    // the backup duration of the sessions and the packets
+    maxDisconnectionDuration: 2 * 60 * 1000, // 2mins
+
+    // whether to skip middlewares upon successful recovery
+    skipMiddlewares: true,
+  },
 });
 
 io.adapter(createAdapter(pub, sub));
@@ -44,7 +55,12 @@ const onConnection = (socket: Socket) => {
   registerDisconnection(socket);
 };
 
-io.on("connection", onConnection);
+io.use(authenticate);
+
+io.on("connection", (socket: Socket) => {
+  onConnection(socket);
+  console.log("connection made");
+});
 
 server.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);

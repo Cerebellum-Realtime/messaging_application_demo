@@ -21,6 +21,14 @@ const App = () => {
     };
 
     if (user) {
+      socket.on("connect_error", (reason) => {
+        console.log("Authentication failed:", reason.message);
+        if (reason.message === "Authentication error") {
+          socket.disconnect();
+          setUser(null);
+        }
+      });
+
       socket.connect();
       socket.on("message:receive", handleMessage);
     }
