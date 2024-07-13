@@ -46,29 +46,31 @@ const App = () => {
   };
 
   return (
-    <div className="container">
-      {!user ? (
-        <Username toggleUsernameSubmit={handleUsernameSubmit} />
-      ) : (
-        <>
-          <p className="welcome">Welcome, {user}!</p>
-          {!currentChannel ? (
-            <Channel
-              toggleJoinChannel={handleJoinChannel}
-              toggleLeaveChannel={handleLeaveChannel}
-              currentChannel={currentChannel}
-            />
-          ) : (
-            <MessageDisplay
-              currentChannel={currentChannel}
-              user={user}
-              toggleLeaveChannel={handleLeaveChannel}
-              toggleChangeUser={handleChangeUser}
-            />
-          )}
-        </>
-      )}
-    </div>
+    <>
+      <div className="container">
+        {!user ? (
+          <Username toggleUsernameSubmit={handleUsernameSubmit} />
+        ) : (
+          <>
+            <p className="welcome">Welcome, {user}!</p>
+            {!currentChannel ? (
+              <Channel
+                toggleJoinChannel={handleJoinChannel}
+                toggleLeaveChannel={handleLeaveChannel}
+                currentChannel={currentChannel}
+              />
+            ) : (
+              <MessageDisplay
+                currentChannel={currentChannel}
+                user={user}
+                toggleLeaveChannel={handleLeaveChannel}
+                toggleChangeUser={handleChangeUser}
+              />
+            )}
+          </>
+        )}
+      </div>
+    </>
   );
 };
 
