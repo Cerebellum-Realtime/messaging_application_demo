@@ -4,6 +4,7 @@ import "./App.css";
 import Username from "./components/Username";
 import Channel from "./components/Channel";
 import MessageDisplay from "./components/MessageDisplay";
+import cerebellumLogo from "./assets/Cerebellum-transparent.png";
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -47,28 +48,38 @@ const App = () => {
 
   return (
     <>
-      <div className="container">
-        {!user ? (
-          <Username toggleUsernameSubmit={handleUsernameSubmit} />
-        ) : (
-          <>
-            <p className="welcome">Welcome, {user}!</p>
-            {!currentChannel ? (
-              <Channel
-                toggleJoinChannel={handleJoinChannel}
-                toggleLeaveChannel={handleLeaveChannel}
-                currentChannel={currentChannel}
-              />
-            ) : (
-              <MessageDisplay
-                currentChannel={currentChannel}
-                user={user}
-                toggleLeaveChannel={handleLeaveChannel}
-                toggleChangeUser={handleChangeUser}
-              />
-            )}
-          </>
-        )}
+      <header className="header">
+        <section className="top-bar">
+          <div className="logo-container">
+            <img src={cerebellumLogo} alt="Cerebellum Logo" className="logo" />
+            <h1 className="logo-text">Cerebellum</h1>
+          </div>
+        </section>
+      </header>
+      <div className="container-wrapper">
+        <div className="container">
+          {!user ? (
+            <Username toggleUsernameSubmit={handleUsernameSubmit} />
+          ) : (
+            <>
+              <p className="welcome">Welcome, {user}!</p>
+              {!currentChannel ? (
+                <Channel
+                  toggleJoinChannel={handleJoinChannel}
+                  toggleLeaveChannel={handleLeaveChannel}
+                  currentChannel={currentChannel}
+                />
+              ) : (
+                <MessageDisplay
+                  currentChannel={currentChannel}
+                  user={user}
+                  toggleLeaveChannel={handleLeaveChannel}
+                  toggleChangeUser={handleChangeUser}
+                />
+              )}
+            </>
+          )}
+        </div>
       </div>
     </>
   );

@@ -23,19 +23,29 @@ export class ChannelPresenceManager {
     channelName: string,
     socketId: string,
     userInfo: UserInfo
-  ): Promise<void> {
+  ): Promise<UserInfo> {
     const multi = this.redis.multi();
     const userInfoWithSocketId = { ...userInfo, socketId }; // Add socketId to userInfo
+
+    // Convert all values to strings
+    const userInfoWithStrings = Object.fromEntries(
+      Object.entries(userInfoWithSocketId).map(([key, value]) => [
+        key,
+        String(value),
+      ])
+    );
 
     const channelKey = createChannelKey(channelName);
     const userKey = createChannelUserKey(channelName, socketId);
     const userChannelsKey = createUserChannelsKey(socketId);
 
     multi.sadd(channelKey, socketId);
-    multi.hmset(userKey, userInfoWithSocketId);
+    multi.hmset(userKey, userInfoWithStrings);
     multi.sadd(userChannelsKey, channelName);
 
     await multi.exec();
+
+    return userInfoWithStrings;
   }
 
   async removeUserFromChannel(
@@ -105,7 +115,12 @@ export class ChannelPresenceManager {
   ) {
     const userKey = createChannelUserKey(channelName, socketId);
     const userInfo = await this.redis.hgetall(userKey);
-    const mergedUserInfo = { ...userInfo, ...updatedUserInfo };
+    const mergedUserInfo = Object.fromEntries(
+      Object.entries({ ...userInfo, ...updatedUserInfo }).map(
+        ([key, value]) => [key, String(value)]
+      )
+    );
+
     await this.redis.hmset(userKey, mergedUserInfo);
 
     return mergedUserInfo;

@@ -4,8 +4,9 @@ import DisplayMessages from "./DisplayMessages";
 import SendMessageForm from "./SendMessageForm";
 import SendQueueForm from "./SendQueueForm";
 import useChannel from "../customHooks/useChannel";
-import usePresence from "../customHooks/usePresence";
 import ChangeUserName from "./ChangeUserName";
+import OnlineUserPresence from "./OnlineUserPresence";
+import usePresence from "../customHooks/usePresence";
 
 const MessageDisplay = ({
   currentChannel,
@@ -14,6 +15,9 @@ const MessageDisplay = ({
   toggleChangeUser,
 }) => {
   const [messages, setMessages] = useState([]);
+  const { presenceData, updatePresenceInfo } = usePresence(currentChannel, {
+    user,
+  });
 
   const handleMessage = (data) => {
     setMessages((prevMessages) => [
@@ -28,10 +32,6 @@ const MessageDisplay = ({
     handleMessage
   );
 
-  const { presenceData, updateUserInfo } = usePresence(currentChannel, {
-    user,
-  });
-
   const handleLeaveChannel = (event) => {
     event.preventDefault();
     setMessages([]);
@@ -40,25 +40,27 @@ const MessageDisplay = ({
 
   const handleChangeUser = (newUserName) => {
     toggleChangeUser(newUserName);
-    updateUserInfo({ user: newUserName });
+    updatePresenceInfo({ user: newUserName });
   };
 
   return (
     <>
-      <div className="channel-info-container">
-        <p className="channel-info">Current Channel: {currentChannel}</p>
-        <form onSubmit={handleLeaveChannel}>
-          <button type="submit">Leave</button>
-        </form>
+      <div className="message-display">
+        <div>
+          <div className="channel-info-container">
+            <p className="channel-info">Current Channel: {currentChannel}</p>
+            <form onSubmit={handleLeaveChannel}>
+              <button type="submit">Leave</button>
+            </form>
+          </div>
+          <></>
+          <DisplayMessages messages={messages} />
+          <SendMessageForm user={user} publish={publish} />
+          <SendQueueForm user={user} queue={queue} />
+          <ChangeUserName user={user} toggleChangeUser={handleChangeUser} />
+        </div>
+        <OnlineUserPresence presenceData={presenceData} />
       </div>
-      <></>
-      {presenceData.map((data) => (
-        <div key={data.socketId}>{data.user}</div>
-      ))}
-      <DisplayMessages messages={messages} />
-      <SendMessageForm user={user} publish={publish} />
-      <SendQueueForm user={user} queue={queue} />
-      <ChangeUserName user={user} toggleChangeUser={handleChangeUser} />
     </>
   );
 };

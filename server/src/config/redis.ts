@@ -21,3 +21,11 @@ export const redisClient = new Redis(redisConfig)
   .on("error", (error) => {
     console.error("Redis client error:", error);
   });
+
+if (process.env.NODE_ENV === "development") {
+  (async function () {
+    await redisClient.flushdb();
+    console.log("Redis database flushed successfully.");
+  })();
+}
+//

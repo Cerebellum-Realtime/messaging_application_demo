@@ -33,6 +33,7 @@ export const registerSubscriptionHandlers = (io: Server, socket: Socket) => {
   };
 
   const unsubscribe = async (channel: string, callback: Function) => {
+    console.log(channel, "this is a channel");
     try {
       await socket.leave(channel);
       if (typeof callback === "function") {

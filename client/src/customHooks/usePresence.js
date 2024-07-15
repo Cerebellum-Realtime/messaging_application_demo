@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { socket } from "../socket";
 
 const usePresence = (channelName, initialUserInfo) => {
   const [currentPresence] = useState(channelName);
   const [presenceData, setPresenceData] = useState([]);
-  const [userInfo] = useState(initialUserInfo);
+  const userInfoRef = useRef(initialUserInfo);
 
   useEffect(() => {
     if (!currentPresence) {
@@ -41,7 +41,7 @@ const usePresence = (channelName, initialUserInfo) => {
         socket.on(`presence:${currentPresence}:update`, handlePresenceUpdate);
 
         // Enter user into presence set
-        socket.emit("presenceSet:enter", currentPresence, userInfo);
+        socket.emit("presenceSet:enter", currentPresence, userInfoRef.current);
       }
     };
 
@@ -60,42 +60,26 @@ const usePresence = (channelName, initialUserInfo) => {
 
     return () => {
       socket.emit("presenceSet:leave", currentPresence);
-      socket.emit(`presence:unsubscribe`);
+      socket.emit(`presence:unsubscribe`, currentPresence);
       socket.off("connect", handleSocketConnect);
 
       socket.off(`presence:${currentPresence}:leave`, handlePresenceLeave);
       socket.off(`presence:${currentPresence}:join`, handlePresenceJoin);
       socket.off(`presence:${currentPresence}:update`, handlePresenceUpdate);
     };
-  }, [currentPresence, userInfo]);
+  }, [currentPresence]);
 
-  useEffect(() => {
-    console.log("Presence Data Updated:", presenceData);
-  }, [presenceData]);
+  const updatePresenceInfo = useCallback(
+    (updatedUserInfo) => {
+      // Update userInfoRef with updatedUserInfo
+      userInfoRef.current = { ...userInfoRef.current, ...updatedUserInfo };
+      console.log(userInfoRef.current);
+      socket.emit("presence:update", currentPresence, userInfoRef.current);
+    },
+    [currentPresence]
+  ); // Memoize based on currentPresence
 
-  const updateUserInfo = async (updatedUserInfo) => {
-    socket.emit("presence:update", currentPresence, updatedUserInfo);
-  };
-
-  return { presenceData, updateUserInfo };
+  return { presenceData, updatePresenceInfo };
 };
 
 export default usePresence;
-
-/*
-  We need the listeners like the following
-    - usePresence
-      - enters the user into the PresenceSet
-      - can pass in initial data
-      - return updateStatus
-        - this allows you to update the userPresence
-      - when the component unmounts, we need to remove them from presence set
-      - subscribe(subscribe to a new presence set)
-      - unsubscribe(unsubscribe from the presence set)
-      - updateStatus(updates the userInfo)
-
-      
-    - usePresenceListener(channelName)
-      - this subscribes you presence data
-      - returns an an array that will dynamically update based on if users enter and leave a set
-*/

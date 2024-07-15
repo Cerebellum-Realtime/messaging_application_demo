@@ -14,7 +14,7 @@ const useChannel = (channelName, setPreviousMessages, callback) => {
     if (!currentChannel) {
       return;
     }
-    //logic for subscribing to a new channel, will load the past messages in
+
     socket.emit("channel:subscribe", currentChannel, (ack) => {
       if (ack.success) {
         console.log(`Subscribed to channel ${currentChannel}`);
@@ -42,7 +42,7 @@ const useChannel = (channelName, setPreviousMessages, callback) => {
           console.error(`Failed to unsubscribe from channel ${currentChannel}`);
         }
       });
-      socket.off("message:receive", handleMessageReceive);
+      socket.off(`message:receive:${currentChannel}`, handleMessageReceive);
     };
   }, [memoizedSetPreviousMessages, currentChannel]);
 

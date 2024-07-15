@@ -1,5 +1,5 @@
 # userPresence.js
-  - Add the ability to enter and leave presence set
+  <!-- - Add the ability to enter and leave presence set
     - add utility functions for this
   - Clean up the code and review everything
 
@@ -16,7 +16,7 @@
   - Look into returning errors to the client if the user can't do the following
     - enter a presence set
     - leave a presence set
-    - update their information
+    - update their information -->
 
 # Connection State Recovery
   - How do I want to handle this?
@@ -51,6 +51,7 @@
 # Occupancy
   - Need a way to track the number of people in the presence set
   - Maybe add the ability to see the total number of connections?
+  
 # Make sure it works with the cdk
   - Validate that the application can work with the elasticache, and it has the permissions
 # Clean up the css

@@ -17,11 +17,15 @@ export const registerPresenceHandlers = (io: Server, socket: Socket) => {
       console.log(
         `[${socket.id}] Entering presence set for channel: ${channelName}`
       );
-      await presenceManager.addUserToChannel(channelName, socket.id, userInfo);
-      const userIncSocketId = { ...userInfo, socketId: socket.id };
+      const userPresence = await presenceManager.addUserToChannel(
+        channelName,
+        socket.id,
+        userInfo
+      );
+
       io.to(`presence:${channelName}`).emit(
         `presence:${channelName}:join`,
-        userIncSocketId
+        userPresence
       );
       console.log(
         `[${socket.id}] Successfully entered presence set for channel: ${channelName}`
