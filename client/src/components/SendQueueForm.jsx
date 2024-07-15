@@ -8,6 +8,7 @@ const SendQueueForm = ({ user, queue }) => {
     event.preventDefault();
     const messageSend = `${user}: ${queueField}`;
     queue(messageSend);
+    setQueueField("");
   };
 
   return (

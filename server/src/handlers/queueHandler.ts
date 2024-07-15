@@ -20,7 +20,7 @@ export const registerQueueHandlers = (io: Server, socket: Socket) => {
 
       sendMessageToQueue(channelId, message, sendDescription);
       // Still publish to user to maintain highest availability
-      io.to(channelName).emit("message:receive", {
+      io.to(channelName).emit(`message:receive:${channelName}`, {
         channelName,
         message,
         sendDescription,

@@ -18,6 +18,7 @@ const useChannel = (channelName, setPreviousMessages, callback) => {
     socket.emit("channel:subscribe", currentChannel, (ack) => {
       if (ack.success) {
         console.log(`Subscribed to channel ${currentChannel}`);
+        console.log(ack);
         setChannelId(ack.channelId);
         if (ack.pastMessages) {
           memoizedSetPreviousMessages(ack.pastMessages);
@@ -28,6 +29,7 @@ const useChannel = (channelName, setPreviousMessages, callback) => {
     });
 
     const handleMessageReceive = (message) => {
+      console.log("hello");
       callbackRef.current(message);
     };
 
@@ -47,6 +49,7 @@ const useChannel = (channelName, setPreviousMessages, callback) => {
   }, [memoizedSetPreviousMessages, currentChannel]);
 
   const publish = (messageData) => {
+    console.log(channelId);
     socket.emit("message:send", channelId, currentChannel, messageData);
   };
 

@@ -94,26 +94,6 @@ export const registerPresenceHandlers = (io: Server, socket: Socket) => {
     }
   };
 
-  const handlePresenceDisconnection = async () => {
-    try {
-      console.log(`[${socket.id}] Handling presence disconnection`);
-      const channels = await presenceManager.getUserChannels(socket.id);
-      await presenceManager.removeUserFromAllChannels(socket.id);
-      for (const channelName of channels) {
-        io.to(`presence:${channelName}`).emit(
-          `presence:${channelName}:leave`,
-          socket.id
-        );
-      }
-      console.log(`[${socket.id}] Successfully handled presence disconnection`);
-    } catch (error) {
-      console.error(
-        `[${socket.id}] Error handling presence disconnection:`,
-        error
-      );
-    }
-  };
-
   const updateUserInfo = async (
     channelName: string,
     updatedUserInfo: UserInfo
@@ -137,6 +117,26 @@ export const registerPresenceHandlers = (io: Server, socket: Socket) => {
       );
     } catch (error) {
       console.error(`[${socket.id}] Error updating user info:`, error);
+    }
+  };
+
+  const handlePresenceDisconnection = async () => {
+    try {
+      console.log(`[${socket.id}] Handling presence disconnection`);
+      const channels = await presenceManager.getUserChannels(socket.id);
+      await presenceManager.removeUserFromAllChannels(socket.id);
+      for (const channelName of channels) {
+        io.to(`presence:${channelName}`).emit(
+          `presence:${channelName}:leave`,
+          socket.id
+        );
+      }
+      console.log(`[${socket.id}] Successfully handled presence disconnection`);
+    } catch (error) {
+      console.error(
+        `[${socket.id}] Error handling presence disconnection:`,
+        error
+      );
     }
   };
 

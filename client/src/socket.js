@@ -1,6 +1,6 @@
 import { io } from "socket.io-client";
 
-const URL = "localhost:8000";
+const URL = "WebSoc-ALBWe-gcuqc2XgyiXp-126517574.us-east-2.elb.amazonaws.com";
 
 export const socket = io(URL, {
   autoConnect: false, // required for connection state recovery
