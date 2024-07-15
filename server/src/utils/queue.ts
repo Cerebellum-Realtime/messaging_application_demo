@@ -1,6 +1,7 @@
 import { SQSClient, SendMessageCommand } from "@aws-sdk/client-sqs";
 import { v4 as uuidv4 } from "uuid";
 import dotenv from "dotenv";
+import { timeStamp } from "console";
 dotenv.config();
 
 const queueUrl: string = process.env.QUEUE_URL || "";
@@ -15,15 +16,16 @@ export const sendMessageToQueue = async (
 ): Promise<void> => {
   // Use the queue URL from an environment variable or configuration
 
+  const now = new Date();
+
   // we create messageId and createdAt time
   const params = {
     QueueUrl: queueUrl,
     MessageBody: JSON.stringify({
       channelId,
-      createdAt_messageId: `${Date.now()
-        .toString()
-        .padStart(20, "0")}_${uuidv4()}`,
+      createdAt_messageId: `${now.toISOString().padStart(20, "0")}_${uuidv4()}`,
       content: `${message} => ${sendDescription}`,
+      createdAt: now.toISOString(),
     }),
   };
 
