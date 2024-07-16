@@ -27,6 +27,10 @@ const messageSchema = new dynamoose.Schema({
     type: String,
     required: true,
   },
+  createdAt: {
+    type: String,
+    required: true,
+  },
 });
 
 // Define the Message model
