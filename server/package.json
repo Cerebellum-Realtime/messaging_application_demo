@@ -24,6 +24,7 @@
     "dynamoose": "^4.0.1",
     "express": "^4.19.2",
     "ioredis": "^5.4.1",
+    "redis-om": "^0.4.3",
     "redis": "^4.6.15",
     "socket.io": "^4.7.5",
     "uuid": "^10.0.0",

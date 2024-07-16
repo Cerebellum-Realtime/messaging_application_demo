@@ -9,6 +9,7 @@ import { registerDisconnection } from "./handlers/disconnection";
 import { pub } from "./config/redis";
 import { createAdapter } from "@socket.io/redis-streams-adapter";
 import * as dynamoose from "dynamoose";
+import { registerPresenceHandlers } from "./handlers/presenceHandler";
 dotenv.config();
 
 const port = process.env.PORT || 8000;
@@ -49,10 +50,12 @@ const io = new Server(server, {
 io.adapter(createAdapter(pub));
 
 const onConnection = (socket: Socket) => {
+  console.log(socket.id, " connected");
   io.emit("recovery:enable"); // Nominal – the server must send at least one event in order to initialize the offset on the client side
   registerSubscriptionHandlers(io, socket);
   registerMessageHandlers(io, socket);
   registerQueueHandlers(io, socket);
+  registerPresenceHandlers(io, socket);
   registerDisconnection(socket);
 };
 
