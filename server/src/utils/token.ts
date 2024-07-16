@@ -13,9 +13,9 @@ export class Cerebellum {
     this.apiKey = apiKey;
   }
 
-  createTokenRequest(payload: Payload) {
+  createToken(payload: Payload) {
     return jwt.sign(payload, this.apiKey, {
-      expiresIn: "2m",
+      expiresIn: "1m",
     });
   }
 }

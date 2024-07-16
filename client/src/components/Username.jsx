@@ -9,11 +9,19 @@ const Username = ({ toggleUsernameSubmit, onSetToken }) => {
   const handleUsernameSubmit = async (event) => {
     event.preventDefault();
 
-    const { data } = await axios.post("/login", {
-      // http://localhost:5173/login
-      username,
-    });
-    socket.auth.token = data;
+    // Get the token and set the auth header
+    const { data } = await axios.post(
+      "http://WebSoc-ALBWe-hirjoGMoWK9V-571566059.us-east-1.elb.amazonaws.com/login",
+      {
+        username,
+      }
+    );
+    // const { data } = await axios.post("/login", {
+    //   username,
+    // });
+    socket.auth.token = data; // Set a `token` prop on the `auth` header used to make a connection to the signed token
+    console.log("socket: ", socket);
+
     toggleUsernameSubmit(username);
   };
 

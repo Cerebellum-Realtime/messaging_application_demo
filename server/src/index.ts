@@ -59,7 +59,7 @@ io.use(authenticate);
 
 io.on("connection", (socket: Socket) => {
   onConnection(socket);
-  console.log("connection made");
+  console.log("Connection made");
 });
 
 server.listen(port, () => {
