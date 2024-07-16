@@ -1,7 +1,6 @@
 import { SQSClient, SendMessageCommand } from "@aws-sdk/client-sqs";
 import { v4 as uuidv4 } from "uuid";
 import dotenv from "dotenv";
-import { timeStamp } from "console";
 dotenv.config();
 
 const queueUrl: string = process.env.QUEUE_URL || "";
