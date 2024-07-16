@@ -6,6 +6,7 @@ interface Message extends Item {
   channelId: string;
   createdAt_messageId: string;
   content: string;
+  createdAt: string;
 }
 
 // Define the schema
@@ -18,14 +19,22 @@ const messageSchema = new dynamoose.Schema({
     type: String,
     rangeKey: true,
     default: () => {
-      const now = Date.now();
+      const now = new Date();
       const uniqueId = uuidv4();
-      return `${now.toString().padStart(20, "0")}_${uniqueId}`;
+      return `${now.toISOString().padStart(20, "0")}_${uniqueId}`;
     },
   },
   content: {
     type: String,
     required: true,
+  },
+  createdAt: {
+    type: String,
+    required: true,
+    default: () => {
+      const now = new Date();
+      return `${now.toISOString()}`;
+    },
   },
 });
 
