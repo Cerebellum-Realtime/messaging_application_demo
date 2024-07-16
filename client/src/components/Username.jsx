@@ -10,12 +10,9 @@ const Username = ({ toggleUsernameSubmit, onSetToken }) => {
     event.preventDefault();
 
     // Get the token and set the auth header
-    const { data } = await axios.post(
-      "http://WebSoc-ALBWe-hirjoGMoWK9V-571566059.us-east-1.elb.amazonaws.com/login",
-      {
-        username,
-      }
-    );
+    const { data } = await axios.post("/login", {
+      username,
+    });
     // const { data } = await axios.post("/login", {
     //   username,
     // });
