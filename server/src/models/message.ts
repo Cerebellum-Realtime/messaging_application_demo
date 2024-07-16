@@ -6,6 +6,7 @@ interface Message extends Item {
   channelId: string;
   createdAt_messageId: string;
   content: string;
+  createdAt: string;
 }
 
 // Define the schema
