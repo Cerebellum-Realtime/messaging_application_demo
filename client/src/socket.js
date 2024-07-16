@@ -1,10 +1,10 @@
 import { io } from "socket.io-client";
 
-const URL = "localhost:8000";
+const URL = "https://ws.chat.averylittlemore.xyz/"; // subdomain CNAME that points to the ALB goes here
 
 export const socket = io(URL, {
   autoConnect: false, // required for connection state recovery
-  transports: ["websocket"], // Include both websocket and polling as fallback
+  transports: ["websocket", "polling"], // attempt WebSocket connection first, fallback to polling
   reconnection: true, // Enable reconnection attempts
   reconnectionAttempts: 5, // Number of attempts before giving up
   reconnectionDelay: 5000, // Delay between reconnection
