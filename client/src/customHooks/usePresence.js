@@ -66,9 +66,7 @@ const usePresence = (channelName, initialUserInfo) => {
 
   const updatePresenceInfo = useCallback(
     (updatedUserInfo) => {
-      // Update userInfoRef with updatedUserInfo
       userInfoRef.current = { ...userInfoRef.current, ...updatedUserInfo };
-      console.log(userInfoRef.current);
       socket.emit("presence:update", currentPresence, userInfoRef.current);
     },
     [currentPresence]
