@@ -10,9 +10,12 @@ const cerebellum = new Cerebellum(API_KEY);
 
 login.post("/", (req: Request, res: Response) => {
   const { username } = req.body;
+
   // Demo bad user creds:
   if (username === "fakeUser") {
-    return res.status(200).send("fakeToken");
+    return res
+      .status(200)
+      .send(jwt.sign({ username: "fakeUser" }, "fakeApiKey"));
   }
   // Dev using Cerebellum validates user credentials and calls `createTokenRequest` if valid
   const token = cerebellum.createToken({ username }); // Create signed token w/ payload as user & secret as API key

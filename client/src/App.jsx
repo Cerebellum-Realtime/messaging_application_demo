@@ -3,23 +3,14 @@ import { socket } from "./socket";
 import "./App.css";
 import Username from "./components/Username";
 import Channel from "./components/Channel";
-import SendMessageForm from "./components/SendMessageForm";
-import DisplayMessages from "./components/DisplayMessages";
-import SendQueueForm from "./components/SendQueueForm";
+import MessageDisplay from "./components/MessageDisplay";
+import cerebellumLogo from "./assets/Cerebellum-transparent.png";
 
 const App = () => {
   const [user, setUser] = useState(null);
   const [currentChannel, setCurrentChannel] = useState(null);
-  const [messages, setMessages] = useState([]);
 
   useEffect(() => {
-    const handleMessage = (data) => {
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        `${data.message} => ${data.sendDescription}`,
-      ]);
-    };
-
     if (user) {
       socket.on("connect_error", (reason) => {
         console.log("Connection error:", reason.message);
@@ -30,14 +21,17 @@ const App = () => {
       });
 
       socket.connect();
-      socket.on("message:receive", handleMessage);
+      socket.on("recovery:enable", () => {
+        console.log("recovery has been enabled");
+      });
+
+      socket.on("disconnect", (reason) => {
+        console.log(`Disconnected: ${reason}`);
+      });
     }
 
     return () => {
-      socket.off("message:receive", handleMessage);
-      if (socket.connected) {
-        socket.disconnect();
-      }
+      socket.off("disconnect");
     };
   }, [user]);
 
@@ -45,40 +39,56 @@ const App = () => {
     setUser(username);
   };
 
-  const handleJoinChannel = (channelInfo, pastMessages) => {
-    setCurrentChannel(channelInfo);
-    setMessages([`You joined ${channelInfo.channelName}`].concat(pastMessages));
-  };
-
   const handleLeaveChannel = () => {
     if (currentChannel) {
-      setMessages([]);
       setCurrentChannel(null);
     }
   };
 
+  const handleJoinChannel = (channelName) => {
+    setCurrentChannel(channelName);
+  };
+
+  const handleChangeUser = (newUserName) => {
+    setUser(newUserName);
+  };
+
   return (
-    <div className="container">
-      {!user ? (
-        <Username toggleUsernameSubmit={handleUsernameSubmit} />
-      ) : (
-        <>
-          <p className="welcome">Welcome, {user}!</p>
-          <Channel
-            toggleJoinChannel={handleJoinChannel}
-            toggleLeaveChannel={handleLeaveChannel}
-            currentChannel={currentChannel}
-          />
-          {currentChannel && (
+    <>
+      <header className="header">
+        <section className="top-bar">
+          <div className="logo-container">
+            <img src={cerebellumLogo} alt="Cerebellum Logo" className="logo" />
+            <h1 className="logo-text">Cerebellum</h1>
+          </div>
+        </section>
+      </header>
+      <div className="container-wrapper">
+        <div className="container">
+          {!user ? (
+            <Username toggleUsernameSubmit={handleUsernameSubmit} />
+          ) : (
             <>
-              <DisplayMessages messages={messages} />
-              <SendMessageForm user={user} currentChannel={currentChannel} />
-              <SendQueueForm user={user} currentChannel={currentChannel} />
+              <p className="welcome">Welcome, {user}!</p>
+              {!currentChannel ? (
+                <Channel
+                  toggleJoinChannel={handleJoinChannel}
+                  toggleLeaveChannel={handleLeaveChannel}
+                  currentChannel={currentChannel}
+                />
+              ) : (
+                <MessageDisplay
+                  currentChannel={currentChannel}
+                  user={user}
+                  toggleLeaveChannel={handleLeaveChannel}
+                  toggleChangeUser={handleChangeUser}
+                />
+              )}
             </>
           )}
-        </>
-      )}
-    </div>
+        </div>
+      </div>
+    </>
   );
 };
 

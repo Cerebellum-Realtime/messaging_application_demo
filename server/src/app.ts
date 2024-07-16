@@ -1,4 +1,4 @@
-import express, { Express, Request, Response } from "express";
+import express, { Express } from "express";
 import cors from "cors";
 import healthCheck from "./routes/healthCheck";
 import login from "./routes/login";

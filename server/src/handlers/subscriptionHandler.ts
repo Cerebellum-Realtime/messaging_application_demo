@@ -9,20 +9,15 @@ export const registerSubscriptionHandlers = (io: Server, socket: Socket) => {
         socket.join(channel),
         db.addChannel(channel),
       ]);
-      const channelInfo = {
-        channelName: channel,
-        channelId: result[1],
-      };
+      const channelId = result[1];
 
-      const pastMessages = await db.getAllMessagesForChannel(
-        channelInfo.channelId
-      );
+      const pastMessages = await db.getAllMessagesForChannel(channelId);
 
       if (typeof callback === "function") {
         callback({
           success: true,
           message: `Successfully subscribed to ${channel}`,
-          channelInfo,
+          channelId,
           pastMessages,
         });
       }
@@ -38,6 +33,7 @@ export const registerSubscriptionHandlers = (io: Server, socket: Socket) => {
   };
 
   const unsubscribe = async (channel: string, callback: Function) => {
+    console.log(channel, "this is a channel");
     try {
       await socket.leave(channel);
       if (typeof callback === "function") {
