@@ -23,7 +23,6 @@ const App = () => {
     }
 
     return () => {
-      socket.off("connect");
       socket.off("disconnect");
     };
   }, [user]);

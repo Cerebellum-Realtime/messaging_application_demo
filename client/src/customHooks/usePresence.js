@@ -32,31 +32,26 @@ const usePresence = (channelName, initialUserInfo) => {
     const handlePresenceSubscribe = (ack) => {
       if (ack.success === true) {
         setPresenceData(ack.users);
-        socket.off(`presence:${currentPresence}:leave`, handlePresenceLeave);
-        socket.off(`presence:${currentPresence}:join`, handlePresenceJoin);
-        socket.off(`presence:${currentPresence}:update`, handlePresenceUpdate);
-
-        socket.on(`presence:${currentPresence}:leave`, handlePresenceLeave);
-        socket.on(`presence:${currentPresence}:join`, handlePresenceJoin);
-        socket.on(`presence:${currentPresence}:update`, handlePresenceUpdate);
 
         // Enter user into presence set
         socket.emit("presenceSet:enter", currentPresence, userInfoRef.current);
       }
     };
 
+    socket.on(`presence:${currentPresence}:leave`, handlePresenceLeave);
+    socket.on(`presence:${currentPresence}:join`, handlePresenceJoin);
+    socket.on(`presence:${currentPresence}:update`, handlePresenceUpdate);
+
     const handleSocketConnect = () => {
-      // Re-subscribe on socket reconnect
-      console.log(currentPresence, "current presence");
       socket.emit(
         "presence:subscribe",
         currentPresence,
         handlePresenceSubscribe
       );
     };
-
-    socket.emit("presence:subscribe", currentPresence, handlePresenceSubscribe);
+    handleSocketConnect();
     socket.on("connect", handleSocketConnect);
+    //When user disconnects he is unsubscribed on the backend, so we need to resubscribe him
 
     return () => {
       socket.emit("presenceSet:leave", currentPresence);
