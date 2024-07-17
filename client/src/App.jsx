@@ -32,6 +32,7 @@ const App = () => {
 
     return () => {
       socket.off("disconnect");
+      socket.off("recovery:enabled");
     };
   }, [user]);
 

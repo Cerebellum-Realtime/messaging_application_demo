@@ -9,15 +9,13 @@ const Username = ({ toggleUsernameSubmit, onSetToken }) => {
   const handleUsernameSubmit = async (event) => {
     event.preventDefault();
 
+    console.log(import.meta.env.VITE_LOAD_BALANCER_ENDPOINT);
     // Get the token and set the auth header
     const { data } = await axios.post("/login", {
       username,
     });
-    // const { data } = await axios.post("/login", {
-    //   username,
-    // });
+
     socket.auth.token = data; // Set a `token` prop on the `auth` header used to make a connection to the signed token
-    console.log("socket: ", socket);
 
     toggleUsernameSubmit(username);
   };
