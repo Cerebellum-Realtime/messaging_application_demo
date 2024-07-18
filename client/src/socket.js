@@ -1,5 +1,6 @@
 import { io } from "socket.io-client";
 
+
 let URL;
 if (process.env.NODE_ENV === "development") {
   URL = "localhost:8000";
@@ -7,10 +8,7 @@ if (process.env.NODE_ENV === "development") {
   URL = import.meta.env.VITE_LOAD_BALANCER_ENDPOINT; // does this need the protocol in front of it?
 }
 
-console.log(URL);
-
 export const socket = io(URL, {
-  transports: ["websocket"],
   autoConnect: false,
   auth: {}, // Token gets added in Username component
   reconnection: true, // Enable reconnection attempts
