@@ -29,7 +29,6 @@ if (process.env.NODE_ENV === "development") {
 // long as your IAM role has appropriate permissions to access DynamoDB.
 
 const io = new Server(server, {
-  transports: ["websocket", "polling"], // attempt WebSocket connection first, fallback to polling
   pingInterval: 10000, // defines length of time each ping packet is sent to ensure connection is still valid; setting to 10s for testing purposes
   pingTimeout: 10000, // defines length of time for the client to rend a pong packet before considering disconnected; setting to 10s for testing
 
