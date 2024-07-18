@@ -41,7 +41,7 @@ const io = new Server(server, {
     skipMiddlewares: false,
   },
   cors: {
-    origin: "https://chat.averylittlemore.xyz", // public website URL here
+    origin: "*", // public website URL here
     credentials: true,
     methods: ["GET", "POST"],
   },
