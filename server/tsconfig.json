@@ -114,7 +114,9 @@
     "setup/dynamo.ts",
     "../dynamoooooose.ts",
     "setup/createTables.ts",
-    "zfiles/dynamodb.ts"
-, "setup/dynamodb.ts"  ],
+    "zfiles/dynamodb.ts",
+    "setup/dynamodb.ts",
+    "../index.ts"
+  ],
   "exclude": ["node_modules", "dist/**/*"]
 }

@@ -1,11 +1,16 @@
 import { io } from "socket.io-client";
 
-// const URL = "https://ws.chat.averylittlemore.xyz/"; // subdomain CNAME that points to the ALB goes here
-const URL =
-  "http://websoc-albwe-wg4t7acilzaa-1776303649.us-east-1.elb.amazonaws.com"; // subdomain CNAME that points to the ALB goes here
+
+let URL;
+if (process.env.NODE_ENV === "development") {
+  URL = "localhost:8000";
+} else {
+  URL = import.meta.env.VITE_LOAD_BALANCER_ENDPOINT; // does this need the protocol in front of it?
+}
 
 export const socket = io(URL, {
-  autoConnect: false, // required for connection state recovery
+  autoConnect: false,
+  auth: {}, // Token gets added in Username component
   reconnection: true, // Enable reconnection attempts
   reconnectionAttempts: 5, // Number of attempts before giving up
   reconnectionDelay: 5000, // Delay between reconnection

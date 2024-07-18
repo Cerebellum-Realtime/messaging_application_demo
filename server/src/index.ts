@@ -10,6 +10,8 @@ import { pub } from "./config/redis";
 import { createAdapter } from "@socket.io/redis-streams-adapter";
 import * as dynamoose from "dynamoose";
 import { registerPresenceHandlers } from "./handlers/presenceHandler";
+import { authenticate } from "./middleware/authenticate";
+
 dotenv.config();
 
 const port = process.env.PORT || 8000;
@@ -38,7 +40,7 @@ const io = new Server(server, {
     maxDisconnectionDuration: 2 * 60 * 1000, // 2mins
 
     // whether to skip middlewares upon successful recovery
-    skipMiddlewares: false,
+    skipMiddlewares: true,
   },
   cors: {
     origin: "*", // public website URL here
@@ -59,7 +61,12 @@ const onConnection = (socket: Socket) => {
   registerDisconnection(socket);
 };
 
-io.on("connection", onConnection);
+io.use(authenticate);
+
+io.on("connection", (socket: Socket) => {
+  onConnection(socket);
+  console.log("Connection made");
+});
 
 server.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);

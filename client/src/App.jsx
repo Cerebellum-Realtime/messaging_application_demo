@@ -12,6 +12,14 @@ const App = () => {
 
   useEffect(() => {
     if (user) {
+      socket.on("connect_error", (reason) => {
+        console.log("Connection error:", reason.message);
+        if (reason.message === "Authentication error") {
+          socket.disconnect();
+          setUser(null);
+        }
+      });
+
       socket.connect();
       socket.on("recovery:enable", () => {
         console.log("recovery has been enabled");
@@ -24,6 +32,7 @@ const App = () => {
 
     return () => {
       socket.off("disconnect");
+      socket.off("recovery:enabled");
     };
   }, [user]);
 
