@@ -12,7 +12,7 @@ export default ({ mode }) => {
         "/login": {
           target:
             process.env.NODE_ENV === "development"
-              ? "http://localhost:8000"
+              ? "http://localhost:3000"
               : process.env.VITE_LOAD_BALANCER_ENDPOINT,
           changeOrigin: true,
         },

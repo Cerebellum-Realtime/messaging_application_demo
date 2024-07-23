@@ -9,10 +9,22 @@ const DisplayMessages = ({ messages }) => {
     }
   }, [messages]);
 
+  function getCurrentTimeFormatted(createdAt) {
+    const date = new Date(createdAt);
+    const options = {
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    };
+    return date.toLocaleTimeString([], options);
+  }
+
   return (
     <ul>
       {messages.map((message, index) => (
-        <li key={index}>{message}</li>
+        <li key={index}>
+          {getCurrentTimeFormatted(message.createdAt)}: {message.content}
+        </li>
       ))}
       <div ref={messagesEndRef} />
     </ul>
