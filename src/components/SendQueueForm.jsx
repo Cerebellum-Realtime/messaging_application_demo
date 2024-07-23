@@ -1,15 +1,20 @@
 /* eslint-disable react/prop-types */
 import { useState, useRef, useEffect } from "react";
-import usePresence from "../customHooks/usePresence";
 import TypingIndicator from "./TypingIndicator";
+import { usePresence } from "@cerebellum/sdk";
+import { cerebellum } from "../socket";
 
-const SendMessageForm = ({ user, publish }) => {
-  const [messageField, setMessageField] = useState("");
+const SendQueueForm = ({ user, queue }) => {
+  const [queueField, setQueueField] = useState("");
   const typingTimeoutRef = useRef(null);
-  const { presenceData, updatePresenceInfo } = usePresence("typing", {
-    user,
-    typing: false,
-  });
+  const { presenceData, updatePresenceInfo } = usePresence(
+    cerebellum,
+    "typing",
+    {
+      user,
+      typing: false,
+    }
+  );
 
   useEffect(() => {
     return () => {
@@ -19,22 +24,17 @@ const SendMessageForm = ({ user, publish }) => {
     };
   }, []);
 
-  useEffect(() => {
-    updatePresenceInfo({ user });
-  }, [user, updatePresenceInfo]);
-
   useEffect(() => {}, [presenceData]);
-
   const sendMessage = (event) => {
     event.preventDefault();
-    const messageSend = `${user}: ${messageField}`;
-    publish(messageSend);
-    setMessageField("");
+    const messageSend = `${user}: ${queueField}`;
+    queue(messageSend);
+    setQueueField("");
     updatePresenceInfo({ typing: false });
   };
 
   const handleOnChange = (e) => {
-    setMessageField(e.target.value);
+    setQueueField(e.target.value);
     updatePresenceInfo({ typing: true });
 
     if (typingTimeoutRef.current) {
@@ -47,13 +47,13 @@ const SendMessageForm = ({ user, publish }) => {
   };
 
   return (
-    <div>
-      <h3>Send directly to DynamoDB</h3>
+    <div className="queue">
+      <h3>Send thru Queue</h3>
       <form className="send" onSubmit={sendMessage}>
         <input
           type="text"
-          placeholder="Message direct to DB"
-          value={messageField}
+          placeholder="Message thru Queue"
+          value={queueField}
           onChange={handleOnChange}
         />
         <button type="submit">Send</button>
@@ -63,4 +63,4 @@ const SendMessageForm = ({ user, publish }) => {
   );
 };
 
-export default SendMessageForm;
+export default SendQueueForm;

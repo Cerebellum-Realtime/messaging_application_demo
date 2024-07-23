@@ -1,12 +1,12 @@
 /* eslint-disable react/prop-types */
 import { useState } from "react";
 import DisplayMessages from "./DisplayMessages";
-import SendMessageForm from "./SendMessageForm";
 import SendQueueForm from "./SendQueueForm";
-import useChannel from "../customHooks/useChannel";
 import ChangeUserName from "./ChangeUserName";
 import OnlineUserPresence from "./OnlineUserPresence";
-import usePresence from "../customHooks/usePresence";
+import { usePresence } from "@cerebellum/sdk";
+import { useChannel } from "@cerebellum/sdk";
+import { cerebellum } from "../socket";
 
 const MessageDisplay = ({
   currentChannel,
@@ -15,23 +15,17 @@ const MessageDisplay = ({
   toggleChangeUser,
 }) => {
   const [messages, setMessages] = useState([]);
-  const { presenceData, updatePresenceInfo } = usePresence(currentChannel, {
-    user,
-  });
-
-  const handleMessage = (data) => {
-    setMessages((prevMessages) => [
-      ...prevMessages,
-      `${data.message} => ${data.sendDescription}`,
-    ]);
-  };
-
-  const { publish, queue } = useChannel(
+  const { presenceData, updatePresenceInfo } = usePresence(
+    cerebellum,
     currentChannel,
-    setMessages,
-    handleMessage
+    {
+      user,
+    }
   );
 
+  const { publish } = useChannel(cerebellum, currentChannel, (message) => {
+    setMessages((prevMessages) => prevMessages.concat(message));
+  });
   const handleLeaveChannel = (event) => {
     event.preventDefault();
     setMessages([]);
@@ -55,8 +49,7 @@ const MessageDisplay = ({
           </div>
           <></>
           <DisplayMessages messages={messages} />
-          <SendMessageForm user={user} publish={publish} />
-          <SendQueueForm user={user} queue={queue} />
+          <SendQueueForm user={user} queue={publish} />
           <ChangeUserName user={user} toggleChangeUser={handleChangeUser} />
         </div>
         <OnlineUserPresence presenceData={presenceData} />
