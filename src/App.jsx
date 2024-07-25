@@ -10,6 +10,7 @@ const App = () => {
   const [user, setUser] = useState(null);
   const [currentChannel, setCurrentChannel] = useState(null);
 
+
   useEffect(() => {
     if (user) {
       cerebellum.authErrorCallback(() => setUser(null));
