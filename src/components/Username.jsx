@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { cerebellum } from "../socket";
 
 /* eslint-disable react/prop-types */
 const Username = ({ toggleUsernameSubmit }) => {
@@ -8,7 +7,6 @@ const Username = ({ toggleUsernameSubmit }) => {
   const handleUsernameSubmit = async (event) => {
     event.preventDefault();
 
-    await cerebellum.auth("http://localhost:3000/login", "POST");
     toggleUsernameSubmit(username);
   };
 

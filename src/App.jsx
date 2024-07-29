@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
-import { cerebellum } from "./socket";
+// import { cerebellum } from "./socket";
 import "./App.css";
 import Username from "./components/Username";
 import Channel from "./components/Channel";
 import MessageDisplay from "./components/MessageDisplay";
 import cerebellumLogo from "./assets/Cerebellum-transparent.png";
+import { useCerebellum } from "@cerebellum/sdk";
 
 const App = () => {
+  const cerebellum = useCerebellum();
   const [user, setUser] = useState(null);
   const [currentChannel, setCurrentChannel] = useState(null);
 
@@ -27,7 +29,7 @@ const App = () => {
       cerebellum.off("disconnect");
       cerebellum.off("recovery:enabled");
     };
-  }, [user]);
+  }, [user, cerebellum]);
 
   const handleUsernameSubmit = (username) => {
     setUser(username);

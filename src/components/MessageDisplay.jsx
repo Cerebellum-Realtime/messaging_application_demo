@@ -1,12 +1,12 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DisplayMessages from "./DisplayMessages";
 import SendQueueForm from "./SendQueueForm";
 import ChangeUserName from "./ChangeUserName";
 import OnlineUserPresence from "./OnlineUserPresence";
 import { usePresence } from "@cerebellum/sdk";
 import { useChannel } from "@cerebellum/sdk";
-import { cerebellum } from "../socket";
+import { useCerebellum } from "@cerebellum/sdk";
 
 const MessageDisplay = ({
   currentChannel,
@@ -14,18 +14,29 @@ const MessageDisplay = ({
   toggleLeaveChannel,
   toggleChangeUser,
 }) => {
+  const cerebellum = useCerebellum();
   const [messages, setMessages] = useState([]);
-  const { presenceData, updatePresenceInfo } = usePresence(
-    cerebellum,
-    currentChannel,
-    {
-      user,
-    }
-  );
+  const { presenceData, updatePresenceInfo } = usePresence(currentChannel, {
+    user,
+  });
 
-  const { publish } = useChannel(cerebellum, currentChannel, (message) => {
+  const { publish } = useChannel(currentChannel, (message) => {
     setMessages((prevMessages) => prevMessages.concat(message));
   });
+
+  useEffect(() => {
+    if (!currentChannel) {
+      return;
+    }
+    const fetchPastMessages = async () => {
+      const response = await cerebellum.getPastMessages(currentChannel);
+      setMessages(response.messages);
+    };
+
+    fetchPastMessages();
+    return () => {};
+  }, [currentChannel, cerebellum]);
+
   const handleLeaveChannel = (event) => {
     event.preventDefault();
     setMessages([]);
