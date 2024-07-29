@@ -2,13 +2,11 @@
 import { useState, useRef, useEffect } from "react";
 import TypingIndicator from "./TypingIndicator";
 import { usePresence } from "@cerebellum/sdk";
-import { cerebellum } from "../socket";
 
 const SendQueueForm = ({ user, queue }) => {
   const [queueField, setQueueField] = useState("");
   const typingTimeoutRef = useRef(null);
   const { presenceData, updatePresenceInfo } = usePresence(
-    cerebellum,
     "typing",
     {
       user,
