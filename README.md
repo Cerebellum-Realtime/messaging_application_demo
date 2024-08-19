@@ -1,8 +1,5 @@
-# React + Vite
+# Messaging Application Demo
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This application serves as a demonstration of how to build a messaging app using the Cerebellum SDK and Server.
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+To learn more about Cerebellum, visit our website at [Cerebellum](https://cerebellum-realtime.github.io/)
